@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather ajax</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="./assets/js/axios.js"></script> -->
+</head>
+<body>
+    <h1 style="text-align: center;">Weather Report</h1>
+    <nav class="navbar bg-light">
+        <div class="container">
+          <form class="d-flex" role="search" onsubmit="return false">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="input">
+            <span class="error"></span>
+            <button class="btn btn-outline-success" id="submit" type="submit" onclick="call()">Search</button>
+          </form>
+        </div>
+      </nav>
+    <div id="app"></div> 
+    <script>
+        function weather(city){
+            // const app = document.querySelector('#app');
+       $.ajax({
+        url:"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/"+city+"?key=54WVMZ4EWS8679EM88HNGW7MC",
+        type:"get",
+        success:function(response){
+            console.log("///////////",response);
+            
+            var weather="<main class='main-container'>"
+    weather +="<div class='location-and-date'>"
+    weather += "<h1 class='location-and-date__location'>"+city.charAt(0).toUpperCase() + city.slice(1)+"</h1> <div>"+new Date(response.days[0].datetime).toDateString()+"</div>"
+
+    weather +="</div>"
+    weather +="<div class='current-temperature'>"
+    // weather +="<div class='current-temperature__icon-container'>"
+    // weather +="<img src='icons/"+response.days[0].icon+".svg' class='current-temperature__icon' id='img'>"
+    // weather +="</div>"
+    weather +="<div class='current-temperature__content-container'>"
+    weather +="<div class='current-temperature__value' id='temp'>"+([(response.days[0].temp-32)*5]/9).toFixed(1)+"&deg;</div>"
+    weather +="<div class='current-temperature__summary' id='weather'>"+response.days[0].conditions+"</div>"
+    weather +="</div>"
+    weather +="</div>"
+
+    weather +='<div class="current-stats">'
+      weather +='<div>'
+        weather +="<div class='current-stats__value'>"+([(response.days[0].tempmax-32)*5]/9).toFixed(0)+"&deg;</div>"
+        weather +='<div class="current-stats__label">High</div>'
+        weather +="<div class='current-stats__value'>"+([(response.days[0].tempmin-32)*5]/9).toFixed(0)+"&deg;</div>"
+        weather +='<div class="current-stats__label">Low</div>'
+        weather +='</div>'
+        weather +='<div>'
+          weather +='<div class="current-stats__value">7mph</div>'
+          weather +='<div class="current-stats__label">Wind</div>'
+          weather +='<div class="current-stats__value">0%</div>'
+          weather +='<div class="current-stats__label">Rain</div>'
+          weather +='</div>'
+          weather +='<div>'
+            weather +="<div class='current-stats__value'>"+response.days[0].sunrise+"</div>"
+            weather +='<div class="current-stats__label">Sunrise</div>'
+            weather +="<div class='current-stats__value'>"+response.days[0].sunset+"</div>"
+            weather +='<div class="current-stats__label">Sunset</div>'
+            weather +='</div>'
+            weather +='</div>'
+    weather +="</main>"
+    document.getElementById("app").innerHTML= weather;
+        }
+       })
+    }
+    function call(){
+    var e=  document.getElementById("input").value;
+    console.log("*************",e)
+    weather(e)
+  }
+    </script>
+</body>
+</html> 
